@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": ["7C3MGKL37L.app.bellmade.bellmade"],
+        "components": [
+          { "/": "/auth/*" }
+        ]
+      }
+    ]
+  }
+}
