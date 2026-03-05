@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "co.tgco.bellmade",
+      "sha256_cert_fingerprints": [
+        "23:89:E0:6C:F2:B8:6C:65:ED:B0:1D:21:99:85:09:31:AD:6E:7E:46:99:B1:63:62:4E:56:7C:5A:C3:63:EC:E0"
+      ]
+    }
+  }
+]
