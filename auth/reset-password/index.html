@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
   <title>Bellmade – Reset Password</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -82,13 +83,36 @@
 
   <script>
     (function () {
-      var hash = window.location.hash || '';
-      var appUrl = 'bellmade://auth/reset-password' + hash;
+      // Email links carry ?token_hash=...&type=recovery; legacy links carry
+      // #access_token=.... Forward only known auth keys to the app.
+      var ALLOWED_KEYS = ['token_hash', 'type', 'access_token', 'refresh_token', 'error', 'error_code', 'error_description'];
+      function filterParams(raw) {
+        var src = new URLSearchParams(raw);
+        var out = new URLSearchParams();
+        ALLOWED_KEYS.forEach(function (k) {
+          var v = src.get(k);
+          if (v) out.set(k, v);
+        });
+        return out.toString();
+      }
+
+      var searchStr = window.location.search ? filterParams(window.location.search.substring(1)) : '';
+      var hashStr = window.location.hash ? filterParams(window.location.hash.substring(1)) : '';
+      var appUrl = 'bellmade://auth/reset-password'
+        + (searchStr ? '?' + searchStr : '')
+        + (hashStr ? '#' + hashStr : '');
+
+      // Single-use tokens should not stay in the address bar or history.
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', window.location.pathname);
+      }
 
       document.getElementById('open-btn').href = appUrl;
 
+      // Try to open the app via scheme redirect
       window.location.href = appUrl;
 
+      // If we're still here after 1.5s, the redirect didn't work — show manual button
       setTimeout(function () {
         document.getElementById('loading').classList.add('hidden');
         document.getElementById('fallback').classList.remove('hidden');
